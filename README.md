@@ -2,7 +2,7 @@
 
 ### MQTT
 
-#### To prevent DOS attacks
+#### To prevent DOS attacks, Remote code execution and Man in the Middle and also passive attacks
 
 - *End-to-End Data Signing*:
 Use digital signatures (based on public/private key cryptography) for all devices (ESP32, Raspberry Pi, cloud) to authenticate data origin.
