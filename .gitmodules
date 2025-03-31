@@ -4,3 +4,6 @@
 [submodule "vehicle_count"]
 	path = vehicle_count
 	url = https://github.com/eshwar4202/vehical_count.git
+[submodule "server"]
+	path = server
+	url = https://github.com/eshwar4202/iot_ui_server.git
