@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attack Execution</title>
+</head>
+<body>
+    <h2>Select Attack Type</h2>
+    <select id="attackType">
+        <option value="flood">Flood</option>
+        <option value="resource">Resource Exhaustion</option>
+        <option value="cache">Cache Attack</option>
+        <option value="observe">Observe Throttling</option>
+        <option value="uri">URI Validation</option>
+    </select>
+    <button onclick="executeAttack()">Execute</button>
+    <pre id="output"></pre>
+
+    <script>
+        function executeAttack() {
+            const attackType = document.getElementById("attackType").value;
+
+            fetch("/execute", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ attack: attackType }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
+

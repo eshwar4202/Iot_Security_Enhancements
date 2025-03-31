@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Security - CoAP Attack Mitigation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .coap-pulse {
+            animation: coap-pulse 2s infinite;
+        }
+
+        @keyframes coap-pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .attack-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .attack-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="bg-gray-800 w-64 p-4 space-y-6">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-orange-400">
+                    <i class="fas fa-satellite-dish mr-2"></i>CoAP Defender
+                </h1>
+                <p class="text-sm text-gray-400">Constrained Application Protocol Security</p>
+            </div>
+
+            <div class="bg-gray-700 p-4 rounded-lg">
+                <h3 class="font-semibold mb-2">CoAP Status</h3>
+                <div class="flex items-center text-green-400 text-sm coap-pulse">
+                    <i class="fas fa-wifi mr-2"></i>
+                    UDP/5683 Active
+                </div>
+                <div class="mt-2 text-xs text-gray-400">
+                    Resources: 15 | Endpoints: 8
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">CoAP Attack Mitigation Panel</h2>
+                <div class="bg-orange-500 text-sm px-4 py-2 rounded-full">
+                    <i class="fas fa-shield-virus mr-2"></i>DTLS Encryption Active
+                </div>
+            </div>
+
+            <!-- Attack Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                <!-- Attack Cards -->
+                <div class="attack-card bg-gray-800 p-4 rounded-xl">
+                    <div class="text-center p-4">
+                        <i class="fas fa-broadcast-tower text-3xl mb-3 text-red-400"></i>
+                        <h3 class="font-bold mb-1">GET/PUT Flood</h3>
+                        <p class="text-xs text-gray-300 mb-3">Request Overload Attack</p>
+                        <button onclick="handleCoapAttack('flood')" 
+                                class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-xs">
+                            Block Flood
+                        </button>
+                    </div>
+                </div>
+
+                <div class="attack-card bg-gray-800 p-4 rounded-xl">
+                    <div class="text-center p-4">
+                        <i class="fas fa-battery-quarter text-3xl mb-3 text-purple-400"></i>
+                        <h3 class="font-bold mb-1">Resource Exhaustion</h3>
+                        <p class="text-xs text-gray-300 mb-3">Memory/CPU Drain</p>
+                        <button onclick="handleCoapAttack('resource')" 
+                                class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg text-xs">
+                            Limit Resources
+                        </button>
+                    </div>
+                </div>
+
+                <div class="attack-card bg-gray-800 p-4 rounded-xl">
+                    <div class="text-center p-4">
+                        <i class="fas fa-database text-3xl mb-3 text-yellow-400"></i>
+                        <h3 class="font-bold mb-1">Cache Poisoning</h3>
+                        <p class="text-xs text-gray-300 mb-3">Malicious Cache Control</p>
+                        <button onclick="handleCoapAttack('cache')" 
+                                class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg text-xs">
+                            Purge Cache
+                        </button>
+                    </div>
+                </div>
+
+                <div class="attack-card bg-gray-800 p-4 rounded-xl">
+                    <div class="text-center p-4">
+                        <i class="fas fa-eye text-3xl mb-3 text-green-400"></i>
+                        <h3 class="font-bold mb-1">Observe Flood</h3>
+                        <p class="text-xs text-gray-300 mb-3">Observation Overload</p>
+                        <button onclick="handleCoapAttack('observe')" 
+                                class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-xs">
+                            Throttle Observe
+                        </button>
+                    </div>
+                </div>
+
+                <div class="attack-card bg-gray-800 p-4 rounded-xl">
+                    <div class="text-center p-4">
+                        <i class="fas fa-link text-3xl mb-3 text-blue-400"></i>
+                        <h3 class="font-bold mb-1">URI Hijacking</h3>
+                        <p class="text-xs text-gray-300 mb-3">Malicious Resource Paths</p>
+                        <button onclick="handleCoapAttack('uri')" 
+                                class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-xs">
+                            Validate URIs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function handleCoapAttack(attackType) {
+            fetch('/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ attack: attackType })
+            })
+            .then(response => response.json())
+            .then(data => alert(`Shell script executed: ${attackType}\nOutput: ${data.output}`))
+            .catch(error => alert(`Request failed: ${error}`));
+        }
+    </script>
+</body>
+</html>
+
