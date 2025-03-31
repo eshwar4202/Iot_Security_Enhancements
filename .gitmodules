@@ -1,3 +1,6 @@
 [submodule "attack_predict"]
 	path = attack_predict
 	url = https://github.com/eshwar4202/attack_predict.git
+[submodule "vehicle_count"]
+	path = vehicle_count
+	url = https://github.com/eshwar4202/vehical_count.git
