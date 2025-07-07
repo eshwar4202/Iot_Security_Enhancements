@@ -16,6 +16,7 @@ const char *mqtt_topic = "esp32/capture";    // MQTT Topic
 const char *flask_server = "http://192.168.157.179:5000/upload";  // Flask Server
 
 WiFiClient espClient;
+WiFiClient client;
 PubSubClient client(espClient);
 
 // Define the flash pin (GPIO 4 on AI-Thinker ESP32-CAM)
@@ -139,6 +140,37 @@ void setup() {
   }
   Serial.println("\n✅ WiFi Connected!");
   Serial.printf("IP Address: %s\n", WiFi.localIP().toString().c_str());
+
+  //Get mqtt broker address from blockchain authorizer
+  //
+  if (client.connect(serverIP, serverPort)) {
+    Serial.println("✅ Connected to server");
+
+    // Send Solana address
+    String solanaAddress = "3wJK3cuN4Pb4qzTqc5QoBNoNsxn43kMZ8VzMbkX8EyEp";
+    client.println(solanaAddress);
+
+    // Wait for response
+    while (!client.available()) {
+      delay(10);  // Wait a bit for server to respond
+    }
+
+    String response = client.readStringUntil('\n');
+    Serial.println("📩 Server says: " + response);
+    if (response != "0"){
+      mqtt_broker = response
+    }
+    else {
+      Serial.println("pub key not found");
+      exit(EXIT_FAILURE);
+    }
+
+    client.stop();  // Close connection
+    Serial.println("🔌 Disconnected from server");
+
+  } else {
+    Serial.println("❌ Connection to server failed");
+  }
 
   // 🔗 Connect to MQTT
   client.setServer(mqtt_broker, 1883);

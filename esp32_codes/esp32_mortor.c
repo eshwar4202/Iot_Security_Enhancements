@@ -13,6 +13,8 @@ const int mqtt_port = 1883;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+WiFiClient client1;
+
 // Global variables
 int count1 = 1;
 int count2 = 1;
@@ -63,6 +65,36 @@ void setup() {
   Serial.println(WiFi.localIP());
   Serial.print("WiFi Signal Strength (RSSI): ");
   Serial.println(WiFi.RSSI());
+
+  if (client1.connect(serverIP, serverPort)) {
+    Serial.println("✅ Connected to server");
+
+    // Send Solana address
+    String solanaAddress = "3wJK3cuN4Pb4qzTqc5QoBNoNsxn43kMZ8VzMbkX8EyEp";
+    client1.println(solanaAddress);
+
+    // Wait for response
+    while (!client1.available()) {
+      delay(10);  // Wait a bit for server to respond
+    }
+
+    String response = client1.readStringUntil('\n');
+    Serial.println("📩 Server says: " + response);
+
+    if (response != "0"){
+      mqtt_broker = response;
+    }
+    else {
+      Serial.println("Pub key not found");
+      ESP.restart(); // if you want to restart the board
+    }
+
+    client1.stop();  // Close connection
+    Serial.println("🔌 Disconnected from server");
+
+  } else {
+    Serial.println("❌ Connection to server failed");
+  }
 
   testBrokerConnectivity();
   client.setServer(mqtt_broker, mqtt_port);

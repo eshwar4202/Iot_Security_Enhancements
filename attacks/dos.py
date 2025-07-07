@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 
-broker = "test.mosquitto.org"
+broker = "broker.emqx.io"
 topic = "esp32/vehicle_count"
 client = mqtt.Client(protocol=mqtt.MQTTv311)
 
